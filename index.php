@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>RECYCOIN - Resident</title>
 <link href="functions/font.css" rel="stylesheet">
-<script src="functions/tailwind.js"></script>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/logo.png">
 <style>
     :root {
@@ -25,6 +24,8 @@
     #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .modal-overlay { background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
 </style>
+<!-- Built from functions/tailwind.input.css (see tailwind.config.js). Kept last so utilities win over the styles above. -->
+<link href="functions/tailwind.css" rel="stylesheet">
 </head>
 <body>
 
