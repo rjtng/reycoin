@@ -580,6 +580,11 @@ def main_gui_loop():
                 cap.release()
                 cap = None
                 cv2.destroyAllWindows()
+            # The lighting check below can re-light the chute just as a session ends; keep it off while idle
+            if light_is_on:
+                if led_light:
+                    led_light.turn_off_light()
+                light_is_on = False
             time.sleep(0.2)
             continue
 
