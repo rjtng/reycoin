@@ -1,6 +1,7 @@
 <?php
 // db/schema.php - Upgrades the database schema in place, one version at a time.
 // config.php calls this on every request; once the database is current it costs a single SELECT.
+// When you add a migration, update db/recycoin_db.sql (used for fresh installs) to match.
 
 function ensure_schema($pdo) {
     // Statements use IF [NOT] EXISTS so an interrupted upgrade can safely run again
