@@ -90,7 +90,6 @@ if (isset($_GET['ajax'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RECYCOIN - Display</title>
-    <script src="functions/tailwind.js"></script>
     <link href="functions/font.css" rel="stylesheet">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/logo.png">
     <style>
@@ -126,6 +125,8 @@ if (isset($_GET['ajax'])) {
             text-shadow: 0 10px 30px rgba(93, 202, 165, 0.2);
         }
     </style>
+    <!-- Built from functions/tailwind.input.css (see tailwind.config.js). Kept last so utilities win over the styles above. -->
+    <link href="functions/tailwind.css" rel="stylesheet">
 </head>
 <body>
 

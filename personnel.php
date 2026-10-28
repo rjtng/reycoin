@@ -13,7 +13,6 @@ if (!isset($_SESSION['personnel_logged_in']) || $_SESSION['personnel_logged_in']
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>RECYCOIN - Personnel</title>
 <link href="functions/font.css" rel="stylesheet">
-<script src="functions/tailwind.js"></script>
 
 <link rel="icon" type="image/png" sizes="32x32" href="assets/logo.png">
 <link rel="shortcut icon" href="assets/logo.png">
@@ -31,6 +30,8 @@ if (!isset($_SESSION['personnel_logged_in']) || $_SESSION['personnel_logged_in']
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 </style>
+<!-- Built from functions/tailwind.input.css (see tailwind.config.js). Kept last so utilities win over the styles above. -->
+<link href="functions/tailwind.css" rel="stylesheet">
 </head>
 <body>
 <div class="app-container p-4 md:p-6 relative">
