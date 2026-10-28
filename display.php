@@ -13,7 +13,7 @@ if (isset($_GET['ajax'])) {
     
     if ($lock && $lock['user_qr']) {
         // Exclude localhost users even if they somehow acquired a lock
-        $usr_stmt = $pdo->prepare("SELECT * FROM users WHERE qr_code = ? AND ip_address NOT IN ('127.0.0.1', '::1')");
+        $usr_stmt = $pdo->prepare("SELECT * FROM users WHERE qr_code = ? AND (ip_address IS NULL OR ip_address NOT IN ('127.0.0.1', '::1'))");
         $usr_stmt->execute([$lock['user_qr']]);
         $active_user = $usr_stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -65,6 +65,8 @@ if (isset($_GET['ajax'])) {
     }
 
     if ($active_user) {
+        // Send only what the screen shows (never the device token or IP address)
+        $active_user = array_intersect_key($active_user, array_flip(['id', 'qr_code', 'full_name', 'total_points']));
         echo json_encode(['status' => 'success', 'user' => $active_user, 'bin' => $bin_status]);
     } else {
         echo json_encode(['status' => 'empty', 'bin' => $bin_status]);
