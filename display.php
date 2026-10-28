@@ -23,22 +23,32 @@ if (isset($_GET['ajax'])) {
         // Exclude localhost IP addresses from the fetch
         $stmt = $pdo->query("SELECT * FROM users WHERE ip_address NOT IN ('127.0.0.1', '::1') ORDER BY GREATEST(IFNULL(updated_at, '2000-01-01'), created_at) DESC LIMIT 10");
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        foreach ($users as $u) {
-            $ip = $u['ip_address'];
-            
-            // Safe ping execution
-            if (function_exists('exec')) {
-                $disabled = explode(',', ini_get('disable_functions'));
-                if (!in_array('exec', array_map('trim', $disabled))) {
-                    // Check OS to format ping command correctly (Linux/Pi vs Windows)
-                    $ping_cmd = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
-                        ? "ping -n 1 -w 1000 " 
-                        : "ping -c 1 -W 1 ";
-                        
-                    exec($ping_cmd . escapeshellarg($ip) . " > /dev/null 2>&1", $output, $status);
-                    
+
+        // Safe ping execution
+        $disabled = array_map('trim', explode(',', ini_get('disable_functions')));
+        if ($users && function_exists('exec') && !in_array('exec', $disabled)) {
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                // Windows (XAMPP development): one ping at a time
+                foreach ($users as $u) {
+                    exec("ping -n 1 -w 1000 " . escapeshellarg($u['ip_address']), $output, $status);
                     if ($status === 0) {
+                        $active_user = $u;
+                        break; // Found the active connected user!
+                    }
+                }
+            } else {
+                // Linux/Pi: ping every candidate at once, so a poll takes about 1 second instead of
+                // up to 1 second per user. Each phone that answers prints its IP.
+                $cmd = '';
+                foreach ($users as $u) {
+                    $ip = escapeshellarg($u['ip_address']);
+                    $cmd .= "(ping -c 1 -W 1 $ip > /dev/null 2>&1 && echo $ip) & ";
+                }
+                exec($cmd . 'wait', $answered);
+
+                // Pick the most recently active user among the phones that answered
+                foreach ($users as $u) {
+                    if (in_array($u['ip_address'], $answered, true)) {
                         $active_user = $u;
                         break; // Found the active connected user!
                     }
